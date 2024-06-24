@@ -44,7 +44,7 @@ function EditarUsuario() {
     };
 
     return (
-        <div>
+        <div className="container">
             <h1>Editar Usuário</h1>
             <form onSubmit={handleSubmit}>
                 <div>

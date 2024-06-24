@@ -26,7 +26,7 @@ function Login() {
     };
 
     return (
-        <div>
+        <div className="container">
             <h1>Login</h1>
             {erro && <p style={{ color: 'red' }}>{erro}</p>}
             <input type="text" placeholder="CPF" value={cpf} onChange={(e) => setCpf(e.target.value)} />

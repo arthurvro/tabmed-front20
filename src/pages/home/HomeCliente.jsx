@@ -19,7 +19,7 @@ function HomeCliente() {
     }, [paciente.id]);
 
     return (
-        <div>
+        <div className="container">
             <h1>Atendimentos</h1>
             {atendimentos.length > 0 ? (
                 atendimentos.map(atendimento => (

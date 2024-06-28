@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './HomeMedico.css';
 
 function HomeMedico() {
     const [pacientes, setPacientes] = useState([]);
     const [atendimentos, setAtendimentos] = useState({});
     const [mostrarAtendimentos, setMostrarAtendimentos] = useState(null);
-    const navigate = useNavigate();
     const medico = JSON.parse(localStorage.getItem('usuario'));
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPacientes = async () => {
@@ -33,9 +34,12 @@ function HomeMedico() {
 
     const listarAtendimentos = async (pacienteId) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/atendimentos/medico/${medico.id}`);
-            const atendimentosPorPaciente = response.data.filter(atendimento => atendimento.paciente.id === pacienteId);
-            setAtendimentos({ ...atendimentos, [pacienteId]: atendimentosPorPaciente });
+            const response = await axios.get(`http://localhost:8080/api/atendimentos/paciente/${pacienteId}`, {
+                headers: {
+                    tipoAcesso: medico.tipoAcesso
+                }
+            });
+            setAtendimentos(prev => ({ ...prev, [pacienteId]: response.data }));
             setMostrarAtendimentos(pacienteId);
         } catch (error) {
             console.error('Erro ao buscar atendimentos:', error);
@@ -45,18 +49,20 @@ function HomeMedico() {
     return (
         <div className="container">
             <h1>Pacientes</h1>
-            <ul>
+            <ul className="paciente-list">
                 {pacientes.map(paciente => (
-                    <li key={paciente.id}>
-                        {paciente.nome} {paciente.sobrenome} (ID: {paciente.id})
-                        <button onClick={() => iniciarAtendimento(paciente.id)}>Iniciar Atendimento</button>
-                        <button onClick={() => listarAtendimentos(paciente.id)}>Listar Atendimentos</button>
+                    <li key={paciente.id} className="paciente-item">
+                        <span className="paciente-nome">{paciente.nome} {paciente.sobrenome} (ID: {paciente.id})</span>
+                        <div className="paciente-actions">
+                            <button onClick={() => iniciarAtendimento(paciente.id)} className="btn-iniciar">Iniciar Atendimento</button>
+                            <button onClick={() => listarAtendimentos(paciente.id)} className="btn-ver">Listar Atendimentos</button>
+                        </div>
                         {mostrarAtendimentos === paciente.id && atendimentos[paciente.id] && (
-                            <div>
+                            <div className="atendimentos">
                                 <h2>Atendimentos Realizados</h2>
                                 {atendimentos[paciente.id].length > 0 ? (
                                     atendimentos[paciente.id].map(atendimento => (
-                                        <div key={atendimento.id}>
+                                        <div key={atendimento.id} className="atendimento-item">
                                             <h3>Atendimento #{atendimento.id}</h3>
                                             <p><strong>Histórico do Paciente:</strong> {atendimento.historicoPaciente}</p>
                                             <p><strong>Queixas do Paciente:</strong> {atendimento.queixasPaciente}</p>
@@ -79,6 +85,7 @@ function HomeMedico() {
 export default HomeMedico;
 
 
+
 // import React, { useEffect, useState } from 'react';
 // import axios from 'axios';
 // import { useNavigate } from 'react-router-dom';
@@ -93,7 +100,11 @@ export default HomeMedico;
 //     useEffect(() => {
 //         const fetchPacientes = async () => {
 //             try {
-//                 const response = await axios.get('http://localhost:8080/api/usuarios');
+//                 const response = await axios.get('http://localhost:8080/api/usuarios', {
+//                     headers: {
+//                         tipoAcesso: medico.tipoAcesso
+//                     }
+//                 });
 //                 const pacientes = response.data.filter(usuario => usuario.tipoAcesso === 3);
 //                 setPacientes(pacientes);
 //             } catch (error) {
@@ -102,7 +113,7 @@ export default HomeMedico;
 //         };
 
 //         fetchPacientes();
-//     }, []);
+//     }, [medico.tipoAcesso]);
 
 //     const iniciarAtendimento = (pacienteId) => {
 //         navigate(`/formulario-atendimento/${pacienteId}`);

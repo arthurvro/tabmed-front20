@@ -1,0 +1,76 @@
+.container {
+  margin: 40px auto;
+  padding: 20px;
+  max-width: 800px;
+  background-color: #444;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 28px;
+}
+
+.paciente-list {
+  list-style: none;
+  padding: 0;
+}
+
+.paciente-item {
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #555;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.paciente-nome {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.paciente-actions {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn-iniciar {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.btn-ver {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.atendimentos {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #666;
+  border-radius: 10px;
+}
+
+.atendimento-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #777;
+  border-radius: 10px;
+}

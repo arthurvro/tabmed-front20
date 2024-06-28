@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function HomeCliente() {
+function HomePaciente() {
     const [atendimentos, setAtendimentos] = useState([]);
     const paciente = JSON.parse(localStorage.getItem('usuario'));
 
@@ -39,4 +39,4 @@ function HomeCliente() {
     );
 }
 
-export default HomeCliente;
+export default HomePaciente;

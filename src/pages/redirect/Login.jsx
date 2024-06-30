@@ -45,7 +45,7 @@ function Login() {
                 navigate('/cliente-home');
             }
         } catch (error) {
-            alert('Login falhou');
+            alert('Este login nâo consta em nossa base de dados');
         }
     };
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import './FormularioAtendimento.css';
 
 function FormularioAtendimento() {
     const { pacienteId } = useParams();
@@ -40,7 +41,6 @@ function FormularioAtendimento() {
                         value={historico} 
                         onChange={(e) => setHistorico(e.target.value)} 
                         rows="5" 
-                        style={{ resize: 'vertical', minHeight: '100px' }} 
                     />
                 </div>
                 <div>
@@ -49,7 +49,6 @@ function FormularioAtendimento() {
                         value={queixas} 
                         onChange={(e) => setQueixas(e.target.value)} 
                         rows="5" 
-                        style={{ resize: 'vertical', minHeight: '100px' }} 
                     />
                 </div>
                 <div>
@@ -58,7 +57,6 @@ function FormularioAtendimento() {
                         value={laudo} 
                         onChange={(e) => setLaudo(e.target.value)} 
                         rows="5" 
-                        style={{ resize: 'vertical', minHeight: '100px' }} 
                     />
                 </div>
                 <div>
@@ -67,7 +65,6 @@ function FormularioAtendimento() {
                         value={receita} 
                         onChange={(e) => setReceita(e.target.value)} 
                         rows="5" 
-                        style={{ resize: 'vertical', minHeight: '100px' }} 
                     />
                 </div>
                 <button type="submit">Enviar Formulário</button>

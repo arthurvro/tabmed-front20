@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import PacienteCard from '../../components/PacienteCard';
+import ModalComponent from '../../components/ModalComponent';
 import './HomeMedico.css';
 
 function HomeMedico() {
     const [pacientes, setPacientes] = useState([]);
     const [atendimentos, setAtendimentos] = useState({});
     const [mostrarAtendimentos, setMostrarAtendimentos] = useState(null);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
     const medico = JSON.parse(localStorage.getItem('usuario'));
     const navigate = useNavigate();
 
@@ -41,6 +44,7 @@ function HomeMedico() {
             });
             setAtendimentos(prev => ({ ...prev, [pacienteId]: response.data }));
             setMostrarAtendimentos(pacienteId);
+            setModalIsOpen(true);
         } catch (error) {
             console.error('Erro ao buscar atendimentos:', error);
         }
@@ -51,33 +55,42 @@ function HomeMedico() {
             <h1>Pacientes</h1>
             <ul className="paciente-list">
                 {pacientes.map(paciente => (
-                    <li key={paciente.id} className="paciente-item">
-                        <span className="paciente-nome">{paciente.nome} {paciente.sobrenome} (ID: {paciente.id})</span>
-                        <div className="paciente-actions">
-                            <button onClick={() => iniciarAtendimento(paciente.id)} className="btn-iniciar">Iniciar Atendimento</button>
-                            <button onClick={() => listarAtendimentos(paciente.id)} className="btn-ver">Listar Atendimentos</button>
-                        </div>
-                        {mostrarAtendimentos === paciente.id && atendimentos[paciente.id] && (
-                            <div className="atendimentos">
-                                <h2>Atendimentos Realizados</h2>
-                                {atendimentos[paciente.id].length > 0 ? (
-                                    atendimentos[paciente.id].map(atendimento => (
-                                        <div key={atendimento.id} className="atendimento-item">
-                                            <h3>Atendimento #{atendimento.id}</h3>
-                                            <p><strong>Histórico do Paciente:</strong> {atendimento.historicoPaciente}</p>
-                                            <p><strong>Queixas do Paciente:</strong> {atendimento.queixasPaciente}</p>
-                                            <p><strong>Laudo Médico:</strong> {atendimento.laudoMedico}</p>
-                                            <p><strong>Receita Médica:</strong> {atendimento.receitaMedica}</p>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p>Nenhum atendimento encontrado.</p>
-                                )}
-                            </div>
-                        )}
+                    <li key={paciente.id}>
+                        <PacienteCard
+                            paciente={paciente}
+                            onIniciarAtendimento={iniciarAtendimento}
+                            onListarAtendimentos={listarAtendimentos}
+                        />
                     </li>
                 ))}
             </ul>
+
+            <ModalComponent 
+                isOpen={modalIsOpen} 
+                onRequestClose={() => setModalIsOpen(false)}
+                contentLabel="Atendimentos Realizados"
+            >
+                {mostrarAtendimentos !== null && atendimentos[mostrarAtendimentos] ? (
+                    <div className="atendimentos">
+                        <h2>Atendimentos Realizados</h2>
+                        {atendimentos[mostrarAtendimentos].length > 0 ? (
+                            atendimentos[mostrarAtendimentos].map(atendimento => (
+                                <div key={atendimento.id} className="atendimento-item">
+                                    <h3>Atendimento #{atendimento.id}</h3>
+                                    <p><strong>Histórico do Paciente:</strong> {atendimento.historicoPaciente}</p>
+                                    <p><strong>Queixas do Paciente:</strong> {atendimento.queixasPaciente}</p>
+                                    <p><strong>Laudo Médico:</strong> {atendimento.laudoMedico}</p>
+                                    <p><strong>Receita Médica:</strong> {atendimento.receitaMedica}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p>Nenhum atendimento encontrado.</p>
+                        )}
+                    </div>
+                ) : (
+                    <p>Carregando...</p>
+                )}
+            </ModalComponent>
         </div>
     );
 }
@@ -85,17 +98,18 @@ function HomeMedico() {
 export default HomeMedico;
 
 
-
 // import React, { useEffect, useState } from 'react';
 // import axios from 'axios';
 // import { useNavigate } from 'react-router-dom';
+// import PacienteCard from '../../components/PacienteCard';
+// import './HomeMedico.css';
 
 // function HomeMedico() {
 //     const [pacientes, setPacientes] = useState([]);
 //     const [atendimentos, setAtendimentos] = useState({});
 //     const [mostrarAtendimentos, setMostrarAtendimentos] = useState(null);
-//     const navigate = useNavigate();
 //     const medico = JSON.parse(localStorage.getItem('usuario'));
+//     const navigate = useNavigate();
 
 //     useEffect(() => {
 //         const fetchPacientes = async () => {
@@ -121,9 +135,12 @@ export default HomeMedico;
 
 //     const listarAtendimentos = async (pacienteId) => {
 //         try {
-//             const response = await axios.get(`http://localhost:8080/api/atendimentos/medico/${medico.id}`);
-//             const atendimentosPorPaciente = response.data.filter(atendimento => atendimento.paciente.id === pacienteId);
-//             setAtendimentos({ ...atendimentos, [pacienteId]: atendimentosPorPaciente });
+//             const response = await axios.get(`http://localhost:8080/api/atendimentos/paciente/${pacienteId}`, {
+//                 headers: {
+//                     tipoAcesso: medico.tipoAcesso
+//                 }
+//             });
+//             setAtendimentos(prev => ({ ...prev, [pacienteId]: response.data }));
 //             setMostrarAtendimentos(pacienteId);
 //         } catch (error) {
 //             console.error('Erro ao buscar atendimentos:', error);
@@ -133,18 +150,20 @@ export default HomeMedico;
 //     return (
 //         <div className="container">
 //             <h1>Pacientes</h1>
-//             <ul>
+//             <ul className="paciente-list">
 //                 {pacientes.map(paciente => (
 //                     <li key={paciente.id}>
-//                         {paciente.nome} {paciente.sobrenome} (ID: {paciente.id})
-//                         <button onClick={() => iniciarAtendimento(paciente.id)}>Iniciar Atendimento</button>
-//                         <button onClick={() => listarAtendimentos(paciente.id)}>Listar Atendimentos</button>
+//                         <PacienteCard
+//                             paciente={paciente}
+//                             onIniciarAtendimento={iniciarAtendimento}
+//                             onListarAtendimentos={listarAtendimentos}
+//                         />
 //                         {mostrarAtendimentos === paciente.id && atendimentos[paciente.id] && (
-//                             <div>
+//                             <div className="atendimentos">
 //                                 <h2>Atendimentos Realizados</h2>
 //                                 {atendimentos[paciente.id].length > 0 ? (
 //                                     atendimentos[paciente.id].map(atendimento => (
-//                                         <div key={atendimento.id}>
+//                                         <div key={atendimento.id} className="atendimento-item">
 //                                             <h3>Atendimento #{atendimento.id}</h3>
 //                                             <p><strong>Histórico do Paciente:</strong> {atendimento.historicoPaciente}</p>
 //                                             <p><strong>Queixas do Paciente:</strong> {atendimento.queixasPaciente}</p>

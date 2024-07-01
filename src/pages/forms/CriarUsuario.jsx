@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './CriarUsuario.css';
 
 function CriarUsuario() {
@@ -27,16 +29,19 @@ function CriarUsuario() {
                     tipoAcesso: recepcao.tipoAcesso
                 }
             });
-            alert('Usuário criado com sucesso!');
-            navigate('/recepcao-home');
+            toast.success('Usuário criado com sucesso!');
+            setTimeout(() => {
+                navigate('/recepcao-home');
+            }, 3000);
         } catch (error) {
+            toast.error('Erro ao criar usuário');
             console.error('Erro ao criar usuário:', error);
-            alert('Erro ao criar usuário');
         }
     };
 
     return (
         <div className="container">
+            <ToastContainer />
             <h1>Criar Novo Usuário</h1>
             <form onSubmit={handleSubmit}>
                 <div>

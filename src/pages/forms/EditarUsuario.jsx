@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './EditarUsuario.css';
 
 function EditarUsuario() {
     const { id } = useParams();
@@ -17,9 +20,10 @@ function EditarUsuario() {
     useEffect(() => {
         const fetchUsuario = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/usuarios/${id}`);
+                const response = await axios.get(`http://localhost:8080/api/usuarios/${id}`)
                 setUsuario(response.data);
             } catch (error) {
+                toast.error('Erro ao buscar usuário');
                 console.error('Erro ao buscar usuário:', error);
             }
         };
@@ -37,14 +41,19 @@ function EditarUsuario() {
 
         try {
             await axios.put(`http://localhost:8080/api/usuarios/${id}`, usuario);
-            navigate('/recepcao-home');
+            toast.success('Usuário atualizado com sucesso!');
+            setTimeout(() => {
+                navigate('/recepcao-home');
+            }, 3000);
         } catch (error) {
+            toast.error('Erro ao atualizar usuário');
             console.error('Erro ao atualizar usuário:', error);
         }
     };
 
     return (
         <div className="container">
+            <ToastContainer />
             <h1>Editar Usuário</h1>
             <form onSubmit={handleSubmit}>
                 <div>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './FormularioAtendimento.css';
 
 function FormularioAtendimento() {
@@ -25,14 +27,19 @@ function FormularioAtendimento() {
                 laudoMedico: laudo,
                 receitaMedica: receita
             });
-            navigate('/medico-home');
+            toast.success('Atendimento criado com sucesso!');
+            setTimeout(() => {
+                navigate('/medico-home');
+            }, 3000);
         } catch (error) {
+            toast.error('Erro ao criar atendimento.');
             console.error('Erro ao criar atendimento:', error);
         }
     };
 
     return (
         <div className="container">
+            <ToastContainer />
             <h1>Formulario de Atendimento</h1>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -41,6 +48,7 @@ function FormularioAtendimento() {
                         value={historico} 
                         onChange={(e) => setHistorico(e.target.value)} 
                         rows="5" 
+                        style={{ resize: 'vertical', minHeight: '100px' }} 
                     />
                 </div>
                 <div>
@@ -49,6 +57,7 @@ function FormularioAtendimento() {
                         value={queixas} 
                         onChange={(e) => setQueixas(e.target.value)} 
                         rows="5" 
+                        style={{ resize: 'vertical', minHeight: '100px' }} 
                     />
                 </div>
                 <div>
@@ -57,6 +66,7 @@ function FormularioAtendimento() {
                         value={laudo} 
                         onChange={(e) => setLaudo(e.target.value)} 
                         rows="5" 
+                        style={{ resize: 'vertical', minHeight: '100px' }} 
                     />
                 </div>
                 <div>
@@ -65,6 +75,7 @@ function FormularioAtendimento() {
                         value={receita} 
                         onChange={(e) => setReceita(e.target.value)} 
                         rows="5" 
+                        style={{ resize: 'vertical', minHeight: '100px' }} 
                     />
                 </div>
                 <button type="submit">Enviar Formulário</button>

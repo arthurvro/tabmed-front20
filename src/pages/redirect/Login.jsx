@@ -55,7 +55,7 @@ function Login() {
                 <h1 className='login-header'>Tabmed</h1>
 
                 {erroCpf && <p className="erro">{erroCpf}</p>}
-                <input type="text" placeholder="CPF" value={cpf} onChange={(e) => setCpf(e.target.value)} className="login-input"/>
+                <input type="text" placeholder="Chave de acesso" value={cpf} onChange={(e) => setCpf(e.target.value)} className="login-input"/>
                 
                 {erroSenha && <p className="erro">{erroSenha}</p>}
                 <input type="password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} className="login-input"/>
